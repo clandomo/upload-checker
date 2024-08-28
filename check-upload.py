@@ -1,3 +1,4 @@
+import random
 import requests
 from tqdm import tqdm
 from colorama import Fore, Style, init
@@ -238,6 +239,9 @@ if mode == 'json':
     if not tmdb_entries:
         tmdb_entries = get_tmdb_file()
 
+    # Shuffle the entries to randomize the order
+    random.shuffle(tmdb_entries)
+
     # Extract IDs and titles for processing, if statement needed as .json has different labels for title
     if search_type == 'movies':
         tmdb_ids_titles = [(entry['id'], entry.get('original_title', 'Unknown Title')) for entry in tmdb_entries]
@@ -321,6 +325,9 @@ elif mode == 'id':
     # Check if the file is empty or contains no valid TMDb IDs
     if not tmdb_entries:
         tmdb_entries = get_tmdb_file()
+
+    # Shuffle the entries to randomize the order
+    random.shuffle(tmdb_entries)
 
     # Ask for the specific TMDb ID
     tmdb_id = input(Fore.YELLOW + Style.BRIGHT + "Enter the specific TMDb ID you'd like to search for: ").strip()
