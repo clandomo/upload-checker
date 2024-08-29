@@ -2,7 +2,7 @@ import time
 import requests
 import random
 
-from api_manager import validate_config, load_config, setup_api_keys_and_sites
+from api_manager import validate_config, load_config, setup_api_keys_and_sites, test_api_key
 from file_manager import load_tmdb_ids, save_tmdb_ids, get_tmdb_filepath_and_entries
 from user_interaction import get_iterations, get_search_type, get_tmdb_mode, get_tmdb_file, removed_parsed_entries
 from utils import get_latest_tmdb_url, fetch_site_data, extract_tmdb_ids_titles, output_site_results
@@ -20,6 +20,14 @@ validate_config(config)
 
 # Configure API and site information
 api_keys, sites = setup_api_keys_and_sites(config)
+
+# Test API keys from config.json
+for site_name, site_info in sites.items():
+    if test_api_key(site_info['url'], site_info['headers']):
+        print(Fore.GREEN + Style.BRIGHT + f"The API key for {site_name} is valid.")    
+    else:
+        print(Fore.RED + Style.BRIGHT + f"WARNING: The API key for {site_name} is invalid or there was an error. Exiting script...")
+        exit(1)
 
 # Determine the search type (Movies or Shows)
 search_type = get_search_type()
@@ -66,7 +74,7 @@ if mode == 'json':
         progress_bar.write(Fore.YELLOW + Style.BRIGHT + f"Searching for TMDb ID: {tmdb_id} (Title: {title})")
         
         site_results = fetch_site_data(progress_bar, sites, params, search_type)
-        
+
         # Output results in organized format
         output_site_results(progress_bar, site_results)
 
@@ -74,18 +82,19 @@ if mode == 'json':
         processed_tmdb_ids.append(tmdb_id)
 
 elif mode == 'id':
-    # Ask for the specific TMDb ID(s)
-    tmdb_ids_input = input(Fore.YELLOW + Style.BRIGHT + "Enter the TMDb ID(s) you'd like to search for (comma-separated if multiple): ").strip()
+    while True:
+        # Ask for the specific TMDb ID(s)
+        tmdb_ids_input = input(Fore.YELLOW + Style.BRIGHT + "Enter the TMDb ID(s) you'd like to search for (comma-separated if multiple): ").strip()
 
-    # Split the input into a list of TMDb IDs
-    tmdb_ids = tmdb_ids_input.split(',')
+        # Split the input into a list of TMDb IDs, strip whitespace, and remove duplicates by converting to a set
+        tmdb_ids = {tmdb_id.strip() for tmdb_id in tmdb_ids_input.split(',')}
 
-    # Convert each tmdb_id to an integer for comparison
-    try:
-        tmdb_ids = [int(tmdb_id.strip()) for tmdb_id in tmdb_ids]
-    except ValueError:
-        print(Fore.RED + Style.BRIGHT + "ERROR: All TMDb IDs must be numeric values. Please also ensure there are no leading or trailing commas.")
-        exit(1)
+        # Convert the set back to a list of integers for comparison
+        try:
+            tmdb_ids = [int(tmdb_id) for tmdb_id in tmdb_ids]
+            break  # If conversion succeeds, break out of the loop
+        except ValueError:
+            print(Fore.RED + Style.BRIGHT + "ERROR: All TMDb IDs must be numeric values. Please also ensure there are no leading or trailing commas.")
 
     # Extract IDs and titles for processing
     tmdb_ids_titles = extract_tmdb_ids_titles(tmdb_entries, search_type)

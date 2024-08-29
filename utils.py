@@ -1,7 +1,7 @@
 import time
 import pytz
 import requests
-
+from api_manager import send_request
 from datetime import datetime, timedelta
 from colorama import Fore, Style
 from tqdm import tqdm
@@ -39,10 +39,11 @@ def get_latest_tmdb_url(search_type):
     
 def fetch_site_data(progress_bar, sites, params, search_type):
     site_results = {}
+
     for site_name, site_info in sites.items():
         try:
-            response = requests.get(site_info['url'], headers=site_info['headers'], params=params)
-            sites[site_name]['response'] = response.json()
+            # Send request to site for torrent infromation
+            sites[site_name]['response'] = send_request(site_name, site_info, params)
 
             if sites[site_name]['response'] and 'data' in sites[site_name]['response']:
                 sites[site_name]['has_data'] = True

@@ -39,6 +39,17 @@ def validate_config(config):
     time.sleep(1)
     print(Fore.GREEN + Style.BRIGHT + "Configuration successfully validated.")
 
+def test_api_key(api_url, headers):
+    try:
+        response = requests.get(api_url, headers=headers)
+        if response.status_code == 200:
+            return True  # The API key is valid
+        else:
+            return False  # The API key is invalid or there's another issue
+    except requests.exceptions.RequestException as e:
+        print(f"ERROR: Failed to test API key -> {e}")
+        return False
+
 def setup_api_keys_and_sites(config):
     # Access the API keys and sites from the validated config
     api_keys = config['api_keys']
@@ -59,8 +70,8 @@ def setup_api_keys_and_sites(config):
 
 def send_request(site_name, site_info, params):
     try:
-        response = requests.get(site_info['url'], headers=site_info['headers'], params=params)
         time.sleep(1)  # Add delay to avoid rate limits
+        response = requests.get(site_info['url'], headers=site_info['headers'], params=params)
         return response.json()
     except requests.exceptions.RequestException as e:
         print(Fore.RED + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
