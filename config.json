@@ -1,0 +1,30 @@
+{
+    "api_keys": {
+      "BLU": "INSERT API KEY HERE",
+      "ATH": "INSERT API KEY HERE",
+      "ULCX": "INSERT API KEY HERE",
+      "LST": "INSERT API KEY HERE",
+      "FNP": "INSERT API KEY HERE",
+      "OTW": "INSERT API KEY HERE"
+    },
+    "sites": {
+      "BLU": {
+        "url": "https://blutopia.cc/api/torrents/filter"
+      },
+      "ATH": {
+        "url": "https://aither.cc/api/torrents/filter"
+      },
+      "ULCX": {
+        "url": "https://upload.cx/api/torrents/filter"
+      },
+      "LST": {
+        "url": "https://lst.gg/api/torrents/filter"
+      },
+      "FNP": {
+        "url": "https://fearnopeer.com/api/torrents/filter"
+      },
+      "OTW": {
+        "url": "https://oldtoons.world/api/torrents/filter"
+      }
+    }
+  }
