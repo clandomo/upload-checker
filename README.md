@@ -5,7 +5,7 @@ This script is designed to search for torrents across multiple sites using TMDb 
 ## Features
 
 - **Search Modes**: Choose between Movies or Shows, and specify a TMDb ID manually or read from a `.json` file.
-- **Multi-Site Support**: Search for torrents on multiple torrent sites including BLU, ATH, ULCX, LST, and FNP.
+- **Multi-Site Support**: Search for torrents on multiple torrent sites including BLU, ATH, ULCX, LST, FNP and OTW.
 - **TMDb Data Handling**: Automatically download the latest TMDb IDs file if it is missing or empty, and remove processed entries from the `.json` file to avoid redundant searches.
 - **Detailed Output**: Get organized results with media name, file size, media type, and resolution.
 - **Error Handling**: Includes robust error handling and user prompts to guide through the process.
@@ -28,8 +28,9 @@ pip3 install --user -U -r requirements.txt
 ## Setup
 
 1. Clone the repository.
-2. Place your site's API keys in the `api_keys` dictionary within the script.
-3. Ensure that your `.json` files containing TMDb IDs (`movies_tmdb_ids.json` and `shows_tmdb_ids.json`) are in the same directory as the script.
+2. Place your site's API keys in the `config.json` file in your main directory.
+   - You **MUST** remove any sites from the `config.json` file that you do not intend to use; otherwise, the script will generate an error.
+4. Ensure that your `.json` files containing TMDb IDs (`movies_tmdb_ids.json` and `shows_tmdb_ids.json`) are in the same directory as the script.
 > [!NOTE]
 > If the appropriate `.json` files are not found, the script will generate an error and provide an option to download them directly through the script. This is recommended, as it ensures that the correct and most recent export from TMDb is downloaded and properly renamed for use.
 
@@ -54,7 +55,7 @@ pip3 install --user -U -r requirements.txt
 ### Example
 
 ```sh
-python check-upload.py
+python main.py
 ```
 
 1. **Choose Search Type**: `Movies` or `Shows`.
@@ -67,15 +68,17 @@ If the script detects that the `.json` file is empty or missing, it will prompt 
 
 ## API Keys
 
-Make sure you have valid API keys for the supported torrent sites. Without these keys, the script will return "No data found" for those sites.
+Make sure you have valid API keys for the supported torrent sites. Without these keys, the script will not run and return an error.
 
 ## Error Handling
 
 The script includes error handling for:
 - Missing API keys
+- Invalid or missing `config.json` file
 - Invalid TMDb IDs
 - Network issues while fetching torrent data
 - Issues with downloading or processing the TMDb IDs `.json` file
+- & More!
 
 ## Contributing
 
