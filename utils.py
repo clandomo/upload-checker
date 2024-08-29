@@ -7,18 +7,11 @@ from colorama import Fore, Style
 from tqdm import tqdm
 
 def output_site_results(progress_bar, site_results):
-    if progress_bar is None:
-        for site_name, results in site_results.items():
-            print(Fore.YELLOW + Style.BRIGHT + f"{site_name}:")
-            for result in results:
-                print(Fore.WHITE + f"  {result}")
-            print('\n')
-    else:
-        for site_name, results in site_results.items():
-            progress_bar.write(Fore.YELLOW + Style.BRIGHT + f"{site_name}:")
-            for result in results:
-                progress_bar.write(Fore.WHITE + f"  {result}")
-            progress_bar.write('\n')
+    for site_name, results in site_results.items():
+        progress_bar.write(Fore.YELLOW + Style.BRIGHT + f"{site_name}:")
+        for result in results:
+            progress_bar.write(Fore.WHITE + f"  {result}")
+        progress_bar.write('\n')
 
 def bytes_to_gib(size_in_bytes):
     return size_in_bytes / (1024 ** 3)
@@ -37,23 +30,31 @@ def get_latest_tmdb_url(search_type):
     else:
         return f"http://files.tmdb.org/p/exports/tv_series_ids_{date_for_url}.json.gz"
     
-def fetch_site_data(progress_bar, sites, params, search_type):
+def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
     site_results = {}
 
     for site_name, site_info in sites.items():
+        if site_name in failed_sites:
+            continue  # Skip the site if it's in the failed_sites list
+
         try:
-            # Send request to site for torrent infromation
+            # Send request to site for torrent information
             sites[site_name]['response'] = send_request(site_name, site_info, params)
 
             if sites[site_name]['response'] and 'data' in sites[site_name]['response']:
                 sites[site_name]['has_data'] = True
                 site_results[site_name] = []
                 for item in sites[site_name]['response'].get('data', []):
-                    # Check if the category is "Movie", "Movies", or "TV Show", "TV Shows" based on search type
+                    # Define valid categories based on the search type
+                    valid_categories = {
+                        'movies': ["movie", "movies"],
+                        'shows': ["tv show", "tv shows", "tv"]
+                    }
+
                     category = item['attributes'].get('category', '').lower()
-                    if search_type == 'movies' and category in ["movie", "movies"]:
-                        media_name = item['attributes'].get('name', 'Unknown')
-                    elif search_type == 'shows' and category in ["tv show", "tv shows", "tv"]:
+
+                    # Check if the category is valid for the search type
+                    if category in valid_categories.get(search_type, []):
                         media_name = item['attributes'].get('name', 'Unknown')
                     else:
                         continue  # Skip entries that do not match the search type
@@ -67,10 +68,7 @@ def fetch_site_data(progress_bar, sites, params, search_type):
             if not site_results.get(site_name):
                 site_results[site_name] = ["No data found"]
         except requests.exceptions.RequestException as e:
-            if progress_bar is None:
-                print(Fore.RED + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
-            else:
-                progress_bar.write(Fore.RED + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
+            progress_bar.write(Fore.RED + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
             site_results[site_name] = [f"Error fetching data: {str(e)}"]
             continue
     

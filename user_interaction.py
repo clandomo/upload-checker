@@ -5,20 +5,24 @@ def get_iterations(max_iterations):
     while True:
         try:
             iterations = int(input(Fore.YELLOW + Style.BRIGHT + f"Enter the number of iterations you'd like to perform (Max {max_iterations}): "))
-            if iterations > max_iterations:
+            
+            if iterations <= 0:
+                print(Fore.RED + Style.BRIGHT + "Please enter a positive number greater than 0.")
+            elif iterations > max_iterations:
                 print(Fore.RED + Style.BRIGHT + f"Please enter a number less than or equal to {max_iterations}.")
             elif iterations > 50:
                 warning = input(Fore.RED + Style.BRIGHT + "WARNING: Doing more than 50 iterations can cause issues. Type 'confirm' to proceed or 'back' to change the number: ").lower()
                 if warning == 'confirm':
                     return iterations
-                elif warning == 'back':
-                    continue
-                else:
-                    print(Fore.YELLOW + Style.BRIGHT + "Invalid input. Please type 'confirm' or 'back'.")
+                elif warning != 'back':
+                    print(Fore.RED + Style.BRIGHT + "Invalid input. Please type 'confirm' or 'back'.")
             else:
                 return iterations
+                
         except ValueError:
-            print(Fore.RED + Style.BRIGHT + "Please enter a valid number.")
+            print(Fore.RED + Style.BRIGHT + "Please enter a valid positive integer.")
+
+
 
 def get_search_type():
     while True:
