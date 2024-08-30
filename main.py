@@ -7,7 +7,7 @@ from file_manager import load_tmdb_ids, save_tmdb_ids, get_tmdb_filepath_and_ent
 from user_interaction import get_iterations, get_search_type, get_tmdb_mode, get_tmdb_file, removed_parsed_entries
 from utils import get_latest_tmdb_url, fetch_site_data, extract_tmdb_ids_titles, output_site_results
 from tqdm import tqdm
-from colorama import Fore, Style, init
+from colorama import Back, Fore, Style, init
 
 # Initialize colorama (required for Windows)
 init(autoreset=True)
@@ -67,8 +67,12 @@ if mode == 'json':
     iterations = get_iterations(len(tmdb_ids_titles))
 
     # Create progress bar
-    progress_bar = tqdm(range(iterations), desc=Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Checking TMDb IDs" + Style.RESET_ALL, 
-            bar_format="{l_bar}%s{bar}%s [Elapsed: {elapsed} | Remaining: {remaining}]" % (Fore.CYAN, Fore.RESET))
+    progress_bar = tqdm(
+        range(iterations),
+        desc=Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Checking TMDb IDs" + Style.RESET_ALL, 
+        bar_format="{l_bar}%s{bar}%s" % (Fore.LIGHTGREEN_EX + Back.LIGHTRED_EX, Style.RESET_ALL) + 
+        Fore.LIGHTYELLOW_EX + Style.BRIGHT + "[Elapsed: {elapsed} | Remaining: {remaining}]" + Style.RESET_ALL
+    )
 
     # Perform the checks
     for i in progress_bar:
@@ -111,8 +115,13 @@ elif mode == 'id':
     iterations = len(tmdb_ids)
 
     # Create progress bar
-    progress_bar = tqdm(range(len(tmdb_ids)), desc=Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Checking TMDb IDs" + Style.RESET_ALL, 
-                        bar_format="{l_bar}%s{bar}%s [Elapsed: {elapsed} | Remaining: {remaining}]" % (Fore.CYAN, Fore.RESET))
+    progress_bar = tqdm(
+        range(iterations),
+        desc=Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Checking TMDb IDs" + Style.RESET_ALL, 
+        bar_format="{l_bar}%s{bar}%s" % (Fore.LIGHTGREEN_EX + Back.LIGHTRED_EX, Style.RESET_ALL) + 
+        Fore.LIGHTYELLOW_EX + Style.BRIGHT + "[Elapsed: {elapsed} | Remaining: {remaining}]" + Style.RESET_ALL
+    )
+
 
     # Perform the checks
     for i in progress_bar:

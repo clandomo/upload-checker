@@ -76,7 +76,7 @@ def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
                     is_freeleech = freeleech != "0%" and freeleech != "Unknown"
                     freeleech_star = f" ⭐ {freeleech}" if is_freeleech else ""
 
-                    result = Fore.LIGHTGREEN_EX + f"{media_name}" + Fore.LIGHTYELLOW_EX + " | " + Fore.LIGHTGREEN_EX +  f"{size_in_gib:.2f} GiB {media_type} ({resolution}) S-{seeders}/L-{leechers}{freeleech_star}"
+                    result = Fore.LIGHTGREEN_EX + Style.BRIGHT + f"{media_name}" + Fore.WHITE + " ➤  " + Fore.LIGHTBLUE_EX +  f"{size_in_gib:.2f} GiB {media_type} ({resolution}) S-{seeders}/L-{leechers}{freeleech_star}"
                     site_results[site_name].append(result)
 
             # If no relevant entries found, add "No data found"
