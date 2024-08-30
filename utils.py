@@ -1,16 +1,18 @@
 import time
 import pytz
 import requests
+
 from api_manager import send_request
+from file_manager import save_json_response
 from datetime import datetime, timedelta
 from colorama import Fore, Style
 from tqdm import tqdm
 
 def output_site_results(progress_bar, site_results):
     for site_name, results in site_results.items():
-        progress_bar.write(Fore.YELLOW + Style.BRIGHT + f"{site_name}:")
+        progress_bar.write(Fore.LIGHTYELLOW_EX + Style.BRIGHT + f"{site_name}:")
         for result in results:
-            progress_bar.write(Fore.WHITE + f"  {result}")
+            progress_bar.write(f"  {result}")
         progress_bar.write('\n')
 
 def bytes_to_gib(size_in_bytes):
@@ -41,6 +43,9 @@ def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
             # Send request to site for torrent information
             sites[site_name]['response'] = send_request(site_name, site_info, params)
 
+            # Save the JSON response to a file for inspection (DEBUG ONLY)
+            #save_json_response(site_name, sites[site_name]['response'])
+
             if sites[site_name]['response'] and 'data' in sites[site_name]['response']:
                 sites[site_name]['has_data'] = True
                 site_results[site_name] = []
@@ -58,17 +63,27 @@ def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
                         media_name = item['attributes'].get('name', 'Unknown')
                     else:
                         continue  # Skip entries that do not match the search type
-
+                    
                     media_type = item['attributes'].get('type', 'Unknown')
                     resolution = item['attributes'].get('resolution', 'Unknown')
                     size_in_bytes = item['attributes'].get('size', 0)
                     size_in_gib = bytes_to_gib(size_in_bytes)
-                    site_results[site_name].append(f"{media_name} | {size_in_gib:.2f} GiB {media_type} ({resolution})")
+                    seeders = item['attributes'].get('seeders', 'Unknown')
+                    leechers = item['attributes'].get('leechers', 'Unknown')
+                    freeleech = item['attributes'].get('freeleech', 'Unknown')
+
+                    # Check if torrent is freelech or if value is defined in .json
+                    is_freeleech = freeleech != "0%" and freeleech != "Unknown"
+                    freeleech_star = f" ⭐ {freeleech}" if is_freeleech else ""
+
+                    result = Fore.LIGHTGREEN_EX + f"{media_name}" + Fore.LIGHTYELLOW_EX + " | " + Fore.LIGHTGREEN_EX +  f"{size_in_gib:.2f} GiB {media_type} ({resolution}) S-{seeders}/L-{leechers}{freeleech_star}"
+                    site_results[site_name].append(result)
+
             # If no relevant entries found, add "No data found"
             if not site_results.get(site_name):
                 site_results[site_name] = ["No data found"]
         except requests.exceptions.RequestException as e:
-            progress_bar.write(Fore.RED + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
+            progress_bar.write(Fore.LIGHTRED_EX + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
             site_results[site_name] = [f"Error fetching data: {str(e)}"]
             continue
     
