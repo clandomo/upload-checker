@@ -29,7 +29,7 @@ pip3 install --user -U -r requirements.txt
 
 1. Clone the repository.
 2. Place your site's API keys in the `config.json` file in your main directory.
-   - You **MUST** remove any sites from the `config.json` file that you do not intend to use; otherwise, the script will generate an error.
+   - You **SHOULD** remove any sites from the `config.json` file that you do not plan to use. Failure to do so will result in an error, and the script will exclude that site from the output.
 4. Ensure that your `.json` files containing TMDb IDs (`movies_tmdb_ids.json` and `shows_tmdb_ids.json`) are in the same directory as the script.
 > [!NOTE]
 > If the appropriate `.json` files are not found, the script will generate an error and provide an option to download them directly through the script. This is recommended, as it ensures that the correct and most recent export from TMDb is downloaded and properly renamed for use.
