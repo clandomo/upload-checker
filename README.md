@@ -71,7 +71,7 @@ If the script detects that the `.json` file is empty or missing, it will prompt 
 
 ## API Keys
 
-Make sure you have valid API keys for the supported torrent sites. Without these keys, the script will not run and return an error.
+Ensure that you have valid API keys for the supported torrent sites. Without these keys, the script will return an error for the specific site(s) where the API failed, and no data from that site will be included in the output when processing TMDb ID(s).
 
 ## Error Handling
 
