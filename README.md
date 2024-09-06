@@ -15,8 +15,7 @@ This script is designed to search for torrents across multiple sites using TMDb 
 - Python 3.x
 - Required Python packages:
   - `requests`
-  - `tqdm`
-  - `colorama`
+  - `rich`
   - `pytz`
 
 Install the required packages using pip:
