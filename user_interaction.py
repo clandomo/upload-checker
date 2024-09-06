@@ -1,69 +1,75 @@
-from colorama import Fore, Style
 from file_manager import download_and_extract_tmdb_ids
+from rich.console import Console
+
+console = Console()
 
 def get_iterations(max_iterations):
     while True:
         try:
-            iterations = int(input(Fore.LIGHTYELLOW_EX + Style.BRIGHT + f"Enter the number of iterations you'd like to perform (Max {max_iterations}): "))
+            console.print(f"[bold bright_yellow]Enter the number of iterations you'd like to perform (Max {max_iterations}):[/] ", end="")
+            iterations = int(input())
             
             if iterations <= 0:
-                print(Fore.LIGHTRED_EX + Style.BRIGHT + "Please enter a positive number greater than 0.")
+                console.print("[bold bright_red]Please enter a positive number greater than 0.[/]")
             elif iterations > max_iterations:
-                print(Fore.LIGHTRED_EX + Style.BRIGHT + f"Please enter a number less than or equal to {max_iterations}.")
+                console.print(f"[bold bright_red]Please enter a number less than or equal to {max_iterations}.[/]")
             elif iterations > 50:
-                warning = input(Fore.LIGHTRED_EX + Style.BRIGHT + "WARNING: Doing more than 50 iterations can cause issues. Type 'confirm' to proceed or 'back' to change the number: ").lower()
+                console.print("[underline bold bright_yellow]WARNING: Doing more than 50 iterations can cause issues. Type 'confirm' to proceed or 'back' to change the number: ")
+                warning = input().lower()
                 if warning == 'confirm':
                     return iterations
                 elif warning != 'back':
-                    print(Fore.LIGHTRED_EX + Style.BRIGHT + "Invalid input. Please type 'confirm' or 'back'.")
+                    console.print("[underline bold bright_red]Invalid input. Please type 'confirm' or 'back'.[/]")
             else:
                 return iterations
                 
         except ValueError:
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Please enter a valid positive integer.")
-
-
+            console.print("[bold bright_red]Please enter a valid positive integer.[/]")
 
 def get_search_type():
     while True:
-        search_type = input(Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Would you like to search for Movies or Shows? ").strip().lower()
+        console.print("[bold bright_yellow]Would you like to search for Movies or Shows? [/]", end="")
+        search_type = input().strip().lower()
         if search_type in ['movies', 'shows']:
             return search_type
         else:
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Invalid input. Please enter 'Movies' or 'Shows'.")
+            console.print("[underline bold bright_red]Invalid input. Please enter 'Movies' or 'Shows'.[/]")
 
 def get_tmdb_mode():
     while True:
-        mode = input(Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Would you like to specify a TMDb ID or read from the '.json' file? (type 'id' or 'json'): ").strip().lower()
+        console.print("[bold bright_yellow]Would you like to specify a TMDb ID or read from the '.json' file? (type 'id' or 'json'): [/]", end="")
+        mode = input().strip().lower()
         if mode in ['id', 'json']:
             return mode
         else:
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Invalid input. Please type 'id' to specify a TMDb ID or 'json' to read from the '.json' file.")
+            console.print("[bold bright_red]Invalid input. Please type 'id' to specify a TMDb ID or 'json' to read from the '.json' file.[/]")
 
 def get_tmdb_file(search_type, download_url, filepath, load_tmdb_ids):
-    print(Fore.LIGHTRED_EX + Style.BRIGHT + f"ERROR: The {search_type.capitalize()} TMDb IDs file is either empty or missing. Please download a new file.")
+    console.print(f"[underline bold bright_red]The {search_type.capitalize()} TMDb IDs file is either empty or missing. Please download a new file.[/]")
     while True:
-        download = input(Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Would you like to download the latest TMDb IDs file? (yes/no): ").strip().lower()
-        if download == 'yes':
+        console.print("[bold bright_yellow]Would you like to download the latest TMDb IDs file? (Y/N): [/]", end="")
+        download = input().strip().lower()
+        if download == 'y':
             download_and_extract_tmdb_ids(download_url, filepath)
             tmdb_entries = load_tmdb_ids(filepath)
             if not tmdb_entries:
-                print(Fore.LIGHTRED_EX + Style.BRIGHT + f"ERROR: Failed to download or load the {search_type.capitalize()} TMDb IDs file. Exiting...")
+                console.print(f"[underline bold bright_red]ERROR: Failed to download or load the {search_type.capitalize()} TMDb IDs file. Exiting...[/]")
                 exit(1)
             break
-        elif download == 'no':
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Exiting script...")
+        elif download == 'n':
+            console.print("[bold bright_red]Exiting script...[/]")
             exit(1)
         else:
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Invalid input. Please type 'yes' or 'no'.")
+            console.print("[bold bright_red]Invalid input. Please type 'Y' or 'N'.[/]")
     return tmdb_entries
 
 def removed_parsed_entries():
     while True:
-        answer = input(Fore.LIGHTYELLOW_EX + Style.BRIGHT + "Would you like to remove the recently parsed TMDb ID(s) from the '.json' file? (yes/no): ").strip().lower()
+        console.print("[bold bright_yellow]Would you like to remove the recently parsed TMDb ID(s) from the '.json' file? (yes/no): [/]", end="")
+        answer = input().strip().lower()
         if answer == 'yes':
             return True
         elif answer == 'no':
             return False
         else:
-            print(Fore.LIGHTRED_EX + Style.BRIGHT + "Invalid input. Please type 'yes' or 'no'.")
+            console.print("[bold bright_red]Invalid input. Please type 'yes' or 'no'.[/]")

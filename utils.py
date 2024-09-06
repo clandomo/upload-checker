@@ -5,15 +5,20 @@ import requests
 from api_manager import send_request
 from file_manager import save_json_response
 from datetime import datetime, timedelta
-from colorama import Fore, Style
-from tqdm import tqdm
+from rich.console import Console
+from rich.text import Text
 
-def output_site_results(progress_bar, site_results):
+console = Console()
+
+def output_site_results(site_results):
     for site_name, results in site_results.items():
-        progress_bar.write(Fore.LIGHTYELLOW_EX + Style.BRIGHT + f"{site_name}:")
+        # Print the site name in bold yellow
+        console.print(f"[bold bright_yellow]{site_name}:[/]")
+        
+        # Iterate through the results (which are Text objects) and print them directly
         for result in results:
-            progress_bar.write(f"  {result}")
-        progress_bar.write('\n')
+            console.print(result)  
+        console.print()  # Print a blank line for spacing
 
 def bytes_to_gib(size_in_bytes):
     return size_in_bytes / (1024 ** 3)
@@ -32,7 +37,7 @@ def get_latest_tmdb_url(search_type):
     else:
         return f"http://files.tmdb.org/p/exports/tv_series_ids_{date_for_url}.json.gz"
     
-def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
+def fetch_site_data(sites, params, search_type, failed_sites):
     site_results = {}
 
     for site_name, site_info in sites.items():
@@ -76,14 +81,22 @@ def fetch_site_data(progress_bar, sites, params, search_type, failed_sites):
                     is_freeleech = freeleech != "0%" and freeleech != "Unknown"
                     freeleech_star = f" ⭐ {freeleech}" if is_freeleech else ""
 
-                    result = Fore.LIGHTGREEN_EX + Style.BRIGHT + f"{media_name}" + Fore.WHITE + " ➤  " + Fore.LIGHTBLUE_EX +  f"{size_in_gib:.2f} GiB {media_type} ({resolution}) S-{seeders}/L-{leechers}{freeleech_star}"
+                    # Assuming site_results is a dictionary or list
+                    result = Text()
+                    result.append(f"{media_name}", style="bold bright_green")
+                    result.append(" ➤ ", style="bright_white")
+                    result.append(f"{size_in_gib:.2f} GiB {media_type} ({resolution}) S-{seeders}/L-{leechers}{freeleech_star}", style="bold bright_yellow")
+
+                    # Storing the result in a dictionary/list
                     site_results[site_name].append(result)
 
             # If no relevant entries found, add "No data found"
             if not site_results.get(site_name):
-                site_results[site_name] = ["No data found"]
+                result = Text()
+                result.append("No data found", style="bold bright_red")
+                site_results[site_name].append(result)
         except requests.exceptions.RequestException as e:
-            progress_bar.write(Fore.LIGHTRED_EX + Style.BRIGHT + f"Error fetching data from {site_name}: {str(e)}")
+            console.print(f"[bold bright_red]Error fetching data from {site_name}: {str(e)}[/]")
             site_results[site_name] = [f"Error fetching data: {str(e)}"]
             continue
     
