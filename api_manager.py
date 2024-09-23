@@ -7,23 +7,74 @@ from rich.console import Console
 
 console = Console()
 
+# Define the default configuration values
+default_config = {
+    "api_keys": {
+        "BLU": "INSERT API KEY HERE",
+        "ATH": "INSERT API KEY HERE",
+        "ULCX": "INSERT API KEY HERE",
+        "LST": "INSERT API KEY HERE",
+        "FNP": "INSERT API KEY HERE",
+        "OTW": "INSERT API KEY HERE"
+    },
+    "sites": {
+        "BLU": {
+            "url": "https://blutopia.cc/api/torrents/filter"
+        },
+        "ATH": {
+            "url": "https://aither.cc/api/torrents/filter"
+        },
+        "ULCX": {
+            "url": "https://upload.cx/api/torrents/filter"
+        },
+        "LST": {
+            "url": "https://lst.gg/api/torrents/filter"
+        },
+        "FNP": {
+            "url": "https://fearnopeer.com/api/torrents/filter"
+        },
+        "OTW": {
+            "url": "https://oldtoons.world/api/torrents/filter"
+        }
+    }
+}
+
 def load_config(config_file='config.json'):
     console.print(f"[bold bright_yellow]Loading configuration from '{config_file}'...[/]")
     time.sleep(1)
     try:
+        # Attempt to read the config file
         with open(config_file, 'r') as file:
             config = json.load(file)
         console.print("[bold bright_green]Configuration successfully loaded.[/]")
         return config
+    
     except FileNotFoundError:
+        # If the file doesn't exist, attempt to create a new one
         console.print(f"[underline bold bright_red]ERROR: The configuration file '{config_file}' was not found.[/]")
-        exit(1)
+        console.print("[bold bright_green]Attempting to create a new config.json file...[/]")
+        time.sleep(1)
+        try:
+            # Attempt to write the default config to a new config.json file
+            with open(config_file, 'w') as file:
+                json.dump(default_config, file, indent=4)
+            console.print(f"[bold bright_green]A new '{config_file}' has been created with default values. Please edit this and rerun the script.[/]")
+            exit(0)
+        except OSError as e:
+            console.print(f"[underline bold bright_red]ERROR: Unable to create the configuration file '{config_file}'. OS error: {str(e)}[/]")
+            exit(1)  # Exit the program with an error status
+        except Exception as e:
+            console.print(f"[underline bold bright_red]ERROR: An unexpected error occurred while writing the configuration file: {str(e)}[/]")
+            exit(1)  # Exit the program with an error status
+    
     except json.JSONDecodeError as e:
         console.print(f"[underline bold bright_red]ERROR: Failed to parse the configuration file '{config_file}'. JSON error: {str(e)}[/]")
-        exit(1)
+        exit(1)  # Exit the program with an error status
+    
     except Exception as e:
         console.print(f"[underline bold bright_red]ERROR: An unexpected error occurred while loading the configuration: {str(e)}[/]")
-        exit(1)
+        exit(1)  # Exit the program with an error status
+
 
 def validate_config(config):
     console.print("[bold bright_yellow]Validating configuration...[/]")
