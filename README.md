@@ -70,7 +70,7 @@ python main.py
 If the script detects that the `.json` file is empty or missing, it will prompt you to download the latest TMDb IDs file. The file is downloaded based on the current date to ensure the most up-to-date information.
 
 > [!TIP]
-> To obtain a new, updated TMDb IDs `.json` file, simply delete the old file from the directory and run the script. The script will then prompt you to download the latest version before proceeding with further processing.
+> To obtain a new, updated TMDb IDs `.json` file, simply delete or rename the old file from the directory and run the script. The script will then prompt you to download the latest version before proceeding with further processing.
 
 ## API Keys
 
