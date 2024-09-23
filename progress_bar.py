@@ -10,7 +10,7 @@ console = Console()
 class CustomTaskDescriptionColumn(ProgressColumn):
     def render(self, task):
         color = "bold bright_green" if task.percentage == 100 else "bold bright_yellow"
-        description = "Finished Checking TMDb IDs... " if task.percentage == 100 else "Checking TMDb IDs... "
+        description = "Finished Checking TMDb ID(s)... " if task.percentage == 100 else "Checking TMDb ID(s)... "
         return f"[{color}]{description}[/]"
 
 # Custom column for percentage complete with bold color (yellow until 100%, then green)
@@ -38,7 +38,7 @@ class CustomTimeElapsedColumn(TimeElapsedColumn):
         return f"[{color}]{super().render(task)}[/]"
 
 # Progress with corrected time remaining logic
-def progress_bar(iterations, tmdb_ids_titles, sites, search_type, failed_sites, processed_tmdb_ids, mode, tmdb_ids=None):
+def progress_bar(iterations, tmdb_ids_titles, sites, search_type, failed_sites, processed_tmdb_ids, mode, tmdb_ids=None, search=False, search_string=None):
     # Set up the progress bar with custom columns
     progress = Progress(
         CustomTaskDescriptionColumn(),  # Task description with bold yellow-to-green transition
@@ -57,7 +57,7 @@ def progress_bar(iterations, tmdb_ids_titles, sites, search_type, failed_sites, 
                 params = {'tmdbId': tmdb_id}
 
                 # Print messages above the progress bar
-                progress.console.print(f"[bold bright_yellow]Searching for TMDb ID: {tmdb_id} (Title: {title})[/]")
+                progress.console.print(f"[bold bright_green]Searching for TMDb ID: {tmdb_id} (Title: {title})[/]")
                 
                 # Simulate fetching site data (replace with actual function call)
                 site_results = fetch_site_data(sites, params, search_type, failed_sites)
@@ -76,10 +76,10 @@ def progress_bar(iterations, tmdb_ids_titles, sites, search_type, failed_sites, 
                     progress.console.print(f"[bold bright_green]Found TMDb ID: {tmdb_id} (Title: {title})[/]")
                     params = {'tmdbId': tmdb_id}
 
-                    # Simulate fetching site data (replace with actual function call)
-                    site_results = fetch_site_data(sites, params, search_type, failed_sites)
+                    # Fetch site data
+                    site_results = fetch_site_data(sites, params, search_type, failed_sites, search, search_string)
 
-                    # Output results in organized format (replace with actual function call)
+                    # Output results in organized format
                     output_site_results(site_results)
 
                     # Add the processed TMDb ID to the list
