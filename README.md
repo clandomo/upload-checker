@@ -88,7 +88,7 @@ If you have suggestions or want to contribute, feel free to fork the repository 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://opensource.org/license/MIT) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/RegEdits-TSC/TMDb-Upload-Checker/blob/main/LICENSE) file for details.
 
 ---
 
