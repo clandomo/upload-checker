@@ -2,6 +2,8 @@
 
 This script is designed to search for torrents across multiple sites using TMDb IDs. It provides functionality to either specify a TMDb ID manually or read from a `.json` file containing multiple TMDb IDs. The script checks whether torrents corresponding to these IDs are available on various torrent sites and outputs the results in an organized format.
 
+![License](https://img.shields.io/github/license/RegEdits-TSC/TMDb-Upload-Checker) ![Issues](https://img.shields.io/github/issues/RegEdits-TSC/TMDb-Upload-Checker) ![Stars](https://img.shields.io/github/stars/RegEdits-TSC/TMDb-Upload-Checker) ![Forks](https://img.shields.io/github/forks/RegEdits-TSC/TMDb-Upload-Checker)
+
 ## Features
 
 - **Search Modes**: Choose between Movies or Shows, and specify a TMDb ID manually or read from a `.json` file.
@@ -9,6 +11,8 @@ This script is designed to search for torrents across multiple sites using TMDb 
 - **TMDb Data Handling**: Automatically download the latest TMDb IDs file if it is missing or empty, and remove processed entries from the `.json` file to avoid redundant searches.
 - **Detailed Output**: Get organized results with media name, file size, media type, and resolution.
 - **Error Handling**: Includes robust error handling and user prompts to guide through the process.
+- **String Searching**: When searching for a TMDb ID, you now have the option to search for a specific string, such as '2160p' or 'FLUX'.
+- **Continuous Search**: You can now continue searching as the script runs, with a prompt to either proceed or stop after each set of parses.
 
 ## Prerequisites
 
