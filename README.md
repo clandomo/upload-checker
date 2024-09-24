@@ -4,6 +4,20 @@ This script is designed to search for torrents across multiple sites using TMDb 
 
 ![License](https://img.shields.io/github/license/RegEdits-TSC/TMDb-Upload-Checker) ![Issues](https://img.shields.io/github/issues/RegEdits-TSC/TMDb-Upload-Checker) ![Stars](https://img.shields.io/github/stars/RegEdits-TSC/TMDb-Upload-Checker) ![Forks](https://img.shields.io/github/forks/RegEdits-TSC/TMDb-Upload-Checker)
 
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Running the Script](#running-the-script)
+  - [Example](#example)
+  - [Handling Missing or Empty `.json` Files](#handling-missing-or-empty-json-files)
+- [API Keys](#api-keys)
+- [Error Handling](#error-handling)
+- [Contributing](#contributing)
+- [License](#license)
+- [Additional Notes](#additional-notes)
+
 ## Features
 
 - **Search Modes**: Choose between Movies or Shows, and specify a TMDb ID manually or read from a `.json` file.
@@ -33,7 +47,9 @@ pip3 install --user -U -r requirements.txt
 1. Clone the repository.
 2. Place your site's API keys in the `config.json` file in your main directory.
    - You **SHOULD** remove any sites from the `config.json` file that you do not plan to use. Failure to do so will result in an error, and the script will exclude that site from the output.
+   - If the `config.json` file is not found, a new one will be automatically generated with default values. You will then need to manually enter the API keys for each site you intend to use.
 4. Ensure that your `.json` files containing TMDb IDs (`movies_tmdb_ids.json` and `shows_tmdb_ids.json`) are in the same directory as the script.
+
 > [!NOTE]
 > If the appropriate `.json` files are not found, the script will generate an error and provide an option to download them directly through the script. This is recommended, as it ensures that the correct and most recent export from TMDb is downloaded and properly renamed for use.
 
@@ -56,6 +72,11 @@ pip3 install --user -U -r requirements.txt
    - Freeleech (e.g., ⭐ 50%)
 
 4. **Post-Search Options**: After the search, you can choose to remove the processed TMDb ID(s) from the `.json` file to avoid future redundant searches.
+
+> [!NOTE]
+> This applies exclusively when using the 'json' search type. When searching by 'id', the script will not prompt you to remove entries from the TMDb IDs file.
+
+5. **Continue Search**: The script will prompt you to choose whether to continue searching for additional TMDb IDs or to exit the script.
 
 ### Example
 
@@ -102,3 +123,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 - Ensure you follow the API usage guidelines of the supported torrent sites to avoid rate limiting or being banned.
 - The script is designed to be user-friendly, with prompts and feedback to guide you through the search process.
+
+![RegEdits Torrenting](https://github.com/RegEdits-TSC/VT-Launch-Scripts/blob/main/RegEdits_Torrenting_Cover.png?raw=true)
+
+Copyright © 2024 - RegEdits Torrenting 
