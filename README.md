@@ -52,6 +52,8 @@ pip3 install --user -U -r requirements.txt
    - File size (in GiB)
    - Media type (e.g., Remux, WEB-DL)
    - Resolution (e.g., 1080p, 2160p)
+   - Seeders & Leechers (e.g., S73/L12)
+   - Freeleech (e.g., ⭐ 50%)
 
 4. **Post-Search Options**: After the search, you can choose to remove the processed TMDb ID(s) from the `.json` file to avoid future redundant searches.
 
